@@ -1,0 +1,40 @@
+/* Grid for side-by-side layout */
+.contact-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.company-info {
+  flex: 1;
+  background: #f3f4f6;
+  padding: 1.5rem;
+  border-radius: 12px;
+  color: #1f2937;
+  min-width: 250px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.company-info h2 {
+  margin-bottom: 1rem;
+  color: #4f46e5;
+}
+
+.company-info p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.contact-form-area {
+  flex: 1.2;
+  min-width: 300px;
+}
+
+/* Make it stack vertically on smaller screens */
+@media (max-width: 768px) {
+  .contact-grid {
+    flex-direction: column;
+  }
+}
