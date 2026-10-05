@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, Link, useLocation } from 'react-router-dom';
 
+import Logo from './components/Logo';
+import { useTheme } from './theme';
 import FrontPage from './pages/FrontPage';
 import About from './pages/About';
 import Signup from './pages/Signup';
@@ -21,6 +23,7 @@ const links = [
 
 function Navbar() {
   const [open, setOpen] = useState(false);
+  const [theme, toggleTheme] = useTheme();
   const { pathname } = useLocation();
 
   // Close the menu after navigating, and on Escape
@@ -34,22 +37,32 @@ function Navbar() {
   return (
     <header className="site-header">
       <nav className="navbar" aria-label="Main">
-        <Link to="/" className="brand">
-          <span aria-hidden="true">🚗</span> DriveEasy
+        <Link to="/" className="brand" aria-label="ECar-Ride home">
+          <Logo />
         </Link>
 
-        <button
-          type="button"
-          className="nav-toggle"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          aria-controls="nav-menu"
-          onClick={() => setOpen((o) => !o)}
-        >
-          <span className="bar" />
-          <span className="bar" />
-          <span className="bar" />
-        </button>
+        <div className="nav-actions">
+          <button
+            type="button"
+            className="theme-toggle"
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            onClick={toggleTheme}
+          >
+            <span aria-hidden="true">{theme === 'dark' ? '☀️' : '🌙'}</span>
+          </button>
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="nav-menu"
+            onClick={() => setOpen((o) => !o)}
+          >
+            <span className="bar" />
+            <span className="bar" />
+            <span className="bar" />
+          </button>
+        </div>
 
         <ul id="nav-menu" className={`nav-menu ${open ? 'open' : ''}`}>
           {links.map((l) => (

@@ -1,7 +1,7 @@
 {
-  "name": "car-rental-server",
+  "name": "ecar-ride-server",
   "version": "1.0.0",
-  "description": "Express + MongoDB API for the Car Rental Booking System",
+  "description": "Express + MongoDB API for the ECar-Ride EV rental platform",
   "main": "index.js",
   "private": true,
   "engines": { "node": ">=18" },

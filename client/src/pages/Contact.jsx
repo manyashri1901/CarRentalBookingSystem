@@ -21,9 +21,9 @@ const Contact = () => {
     <main className="page contact-page">
       <div className="contact-grid">
         <section className="card company-info">
-          <h1>Contact DriveEasy</h1>
+          <h1>Contact ECar-Ride</h1>
           <p><strong>Phone:</strong> <a href="tel:+919222809800">+91 92228098xxxx</a></p>
-          <p><strong>Email:</strong> <a href="mailto:support@driveeasy.in">support@driveeasy.in</a></p>
+          <p><strong>Email:</strong> <a href="mailto:support@ecar-ride.in">support@ecar-ride.in</a></p>
           <p><strong>Address:</strong> 2nd Floor, Tech Park, Bengaluru, India</p>
           <p><strong>Hours:</strong> Mon–Sun, 9:00 AM – 9:00 PM</p>
         </section>

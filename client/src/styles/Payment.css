@@ -87,7 +87,7 @@
   height: 64px;
   margin: 0.75rem 0;
   border-radius: 50%;
-  background: #e3f6ea;
+  background: var(--success-bg);
   color: var(--success);
   font-size: 2rem;
   font-weight: 800;

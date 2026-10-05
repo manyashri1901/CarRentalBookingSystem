@@ -2,25 +2,55 @@
    Page-specific styles live in the other files in this folder. */
 
 :root {
-  --bg: #f4f6fb;
+  color-scheme: light;
+  --bg: #f3f8f6;
   --surface: #ffffff;
-  --surface-alt: #eef1f8;
-  --text: #1c2233;
-  --text-muted: #5a6275;
-  --border: #d9deea;
-  --accent: #3b4cca;
-  --accent-hover: #2d3bad;
+  --surface-alt: #e8f2ee;
+  --text: #10231e;
+  --text-muted: #4a625b;
+  --border: #d3e2dc;
+  --accent: #0f766e;
+  --accent-hover: #115e59;
   --accent-contrast: #ffffff;
-  --success: #17803d;
+  --bolt: #16a34a;
+  --success: #15803d;
+  --success-bg: #dff5e7;
   --danger: #b42318;
+  --danger-bg: #fde8e6;
   --header-bg: #ffffff;
-  --footer-bg: #1c2233;
-  --shadow-sm: 0 1px 3px rgba(20, 30, 60, 0.08);
-  --shadow-md: 0 6px 20px rgba(20, 30, 60, 0.1);
+  --footer-bg: #0b1f1a;
+  --hero-from: #0f766e;
+  --hero-to: #15803d;
+  --shadow-sm: 0 1px 3px rgba(8, 40, 32, 0.08);
+  --shadow-md: 0 6px 20px rgba(8, 40, 32, 0.12);
   --radius: 14px;
   --radius-sm: 10px;
   --tap: 44px;
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #08130f;
+  --surface: #0f201b;
+  --surface-alt: #17302a;
+  --text: #e6f4ef;
+  --text-muted: #9bb8ae;
+  --border: #24433a;
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-contrast: #04211c;
+  --bolt: #4ade80;
+  --success: #4ade80;
+  --success-bg: #12301f;
+  --danger: #fca5a5;
+  --danger-bg: #3a1614;
+  --header-bg: #0c1a16;
+  --footer-bg: #050d0a;
+  --hero-from: #064e3b;
+  --hero-to: #0f766e;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.55);
 }
 
 *,
@@ -143,8 +173,8 @@ input:focus, select:focus, textarea:focus {
   border-radius: var(--radius-sm);
   font-weight: 500;
 }
-.msg.success { background: #e3f6ea; color: var(--success); }
-.msg.error { background: #fde8e6; color: var(--danger); }
+.msg.success { background: var(--success-bg); color: var(--success); }
+.msg.error { background: var(--danger-bg); color: var(--danger); }
 
 /* ---------- Navbar ---------- */
 .site-header {
@@ -175,6 +205,28 @@ input:focus, select:focus, textarea:focus {
   color: var(--text);
   text-decoration: none;
 }
+
+.logo { display: inline-flex; align-items: center; gap: 0.5rem; }
+.wordmark { letter-spacing: -0.02em; }
+.wordmark-dash { color: var(--bolt); }
+.wordmark-accent { color: var(--accent); }
+
+.nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap);
+  height: var(--tap);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.theme-toggle:hover { background: var(--surface-alt); }
 
 .nav-toggle {
   display: inline-flex;
@@ -232,6 +284,9 @@ input:focus, select:focus, textarea:focus {
 
 @media (min-width: 900px) {
   .nav-toggle { display: none; }
+  .nav-actions { order: 3; margin-left: 0.5rem; }
+  .navbar { gap: 0.5rem; }
+  .brand { margin-right: auto; }
   .nav-menu {
     position: static;
     display: flex;

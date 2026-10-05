@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: car-rental-api
+    name: ecar-ride-api
     runtime: node
     rootDir: server
     buildCommand: npm install

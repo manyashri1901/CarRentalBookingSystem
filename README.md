@@ -1,6 +1,6 @@
-# Car Rental Booking System (DriveEasy)
+# ECar-Ride - Electric Vehicle Rentals
 
-Full-stack car rental app: React frontend, Express backend, MongoDB database.
+Full-stack EV rental platform: React frontend, Express backend, MongoDB database.
 
 ## Tech stack
 - **Frontend:** React 18, React Router 6, Vite, plain CSS (mobile-first, responsive)

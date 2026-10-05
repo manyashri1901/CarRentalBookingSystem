@@ -94,7 +94,7 @@ const FrontPage = () => {
       </main>
 
       <footer className="footer">
-        <p>&copy; {new Date().getFullYear()} DriveEasy Car Rentals. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} ECar-Ride Electric Rentals. All rights reserved.</p>
         <div className="socials">
           <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">FB</a>
           <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">TW</a>
