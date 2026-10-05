@@ -1,0 +1,22 @@
+/* Contact page */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.company-info h1 { text-align: left; font-size: 1.6rem; color: var(--accent); }
+.company-info p { margin: 0.5rem 0; }
+.company-info a { word-break: break-word; }
+
+.contact-form-area h2 { text-align: left; }
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .contact-grid { grid-template-columns: 1fr 1.3fr; align-items: start; gap: 2rem; }
+}

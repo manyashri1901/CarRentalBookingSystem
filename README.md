@@ -1,42 +1,52 @@
-🚗 Car Rental Management System
+# Car Rental Booking System (DriveEasy)
 
-A full-stack Car Rental Platform that allows users to browse vehicles, check availability, and manage bookings with secure authentication and a scalable backend system.
+Full-stack car rental app: React frontend, Express backend, MongoDB database.
 
-📌 Features
-🔐 User authentication using JWT
-🚘 Browse available cars with details
-📅 Real-time booking and availability management
-🧾 Booking history tracking for users
-🗄️ RESTful APIs for smooth frontend-backend communication
-⚙️ Role-based access (User/Admin structure - if applicable)
-📱 Responsive UI for better user experience
-🛠️ Tech Stack
+## Tech stack
+- **Frontend:** React 18, React Router 6, Vite, plain CSS (mobile-first, responsive)
+- **Backend:** Node.js, Express 5
+- **Database:** MongoDB (Mongoose), e.g. MongoDB Atlas free tier
 
-Frontend:
+## Project structure
+```
+client/   React app (Vite)   - src/pages, src/styles
+server/   Express API        - routes/, models/
+render.yaml                  - Render blueprint for the API
+```
 
-React.js
-HTML, CSS, JavaScript
+## Run locally
+Requires Node 18+.
 
-Backend:
+```bash
+# 1. API
+cd server
+cp .env.example .env      # then edit .env (MONGO_URI etc.)
+npm install
+npm run dev               # http://localhost:5000
 
-Node.js
-Express.js
+# 2. Frontend (new terminal)
+cd client
+cp .env.example .env
+npm install
+npm run dev               # http://localhost:5173
+```
 
-Database:
+The API starts even without `MONGO_URI`; only database features (signup) are unavailable until it is set.
 
-MongoDB
+## Environment variables
+| File | Variable | Purpose |
+|------|----------|---------|
+| `server/.env` | `MONGO_URI` | MongoDB connection string |
+| `server/.env` | `CLIENT_ORIGIN` | Allowed frontend origin(s) for CORS, comma-separated |
+| `server/.env` | `PORT` | Local port (set automatically by hosts) |
+| `client/.env` | `VITE_API_URL` | Base URL of the API |
 
-Authentication:
+Never commit real `.env` files; only the `.env.example` files are tracked.
 
-JWT (JSON Web Token)
-📂 Project Structure
-Car-Rental-System/
-│
-├── client/              # Frontend (React)
-├── server/              # Backend (Node + Express)
-├── models/              # MongoDB schemas
-├── routes/              # API routes
-├── controllers/         # Business logic
-├── middleware/          # Auth middleware (JWT)
-├── config/              # DB configuration
-└── README.md + .gitignore +.env
+## Deploy (free)
+1. **Database:** create a free cluster on MongoDB Atlas, add a database user, allow network access (0.0.0.0/0 for a hosted API), and copy the connection string.
+2. **API on Render:** New + > Blueprint (or Web Service), pick this repo. Root directory `server`, build `npm install`, start `npm start`. Set `MONGO_URI` and `CLIENT_ORIGIN` (the frontend URL, set it after step 3).
+3. **Frontend on Vercel (or Netlify):** import the repo, root directory `client`, framework Vite, build `npm run build`, output `dist`. Set `VITE_API_URL` to the Render API URL. `client/vercel.json` and `client/public/_redirects` handle SPA routing.
+4. Go back to Render and set `CLIENT_ORIGIN` to the final Vercel URL, then redeploy.
+
+Note: Render's free tier sleeps after inactivity, so the first request can take ~30-60 seconds.

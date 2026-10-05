@@ -1,0 +1,15 @@
+/* Signup page */
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+.signup-form h1 { margin-bottom: 0; font-size: 1.6rem; }
+.signup-form > p.muted { margin: 0; text-align: center; }
+
+@media (min-width: 768px) {
+  .signup-page { padding-top: 3rem; }
+  .signup-form { padding: 2rem; }
+}
