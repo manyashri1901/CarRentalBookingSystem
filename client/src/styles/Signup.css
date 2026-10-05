@@ -1,5 +1,7 @@
 /* Signup page */
 
+.page.signup-page { max-width: 480px; }
+
 .signup-form {
   display: flex;
   flex-direction: column;
