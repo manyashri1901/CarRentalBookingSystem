@@ -30,7 +30,11 @@ export async function apiRequest(path, { method = 'GET', params, body, signal } 
   } catch {
     /* non-JSON body */
   }
-  if (!res.ok) throw new Error(data?.message || `Request failed (${res.status})`);
+  if (!res.ok) {
+    const err = new Error(data?.message || `Request failed (${res.status})`);
+    err.status = res.status;
+    throw err;
+  }
   return data;
 }
 

@@ -66,27 +66,82 @@ async function listStations(f) {
 }
 
 // Bookings: MongoDB when connected. With no database they are kept in memory
-// (demo mode) and are lost when the server restarts.
+// (demo mode) and are lost when the server restarts. Both modes expose the same
+// shape: the public id is a random UUID (`id`), never a database _id.
 const memoryBookings = new Map();
+
+const shape = (doc) => {
+  const { _id, __v, ref, ...rest } = doc;
+  return { id: ref, ...rest };
+};
+const copy = (b) => structuredClone(b);
 
 async function createBooking(data) {
   if (dbReady()) {
     const doc = await Booking.create(data);
-    const { _id, __v, ...rest } = doc.toObject();
-    return { id: String(_id), ...rest };
+    return shape(doc.toObject());
   }
-  const booking = { id: crypto.randomUUID(), ...data, createdAt: new Date() };
+  const booking = { id: crypto.randomUUID(), ...data, payment: { demo: false, razorpayOrderIds: [] }, createdAt: new Date() };
   memoryBookings.set(booking.id, booking);
-  return booking;
+  return copy(booking);
 }
 
 async function getBooking(id) {
-  if (!dbReady()) return memoryBookings.get(id) || null;
-  if (!mongoose.isValidObjectId(id)) return null;
-  const doc = await Booking.findById(id).lean();
-  if (!doc) return null;
-  const { _id, __v, ...rest } = doc;
-  return { id: String(_id), ...rest };
+  if (!dbReady()) {
+    const b = memoryBookings.get(id);
+    return b ? copy(b) : null;
+  }
+  const doc = await Booking.findOne({ ref: String(id) }).lean();
+  return doc ? shape(doc) : null;
 }
 
-module.exports = { createBooking, getBooking, source, listCars, getCar, listStations, seedCars, seedStations };
+// Remember a Razorpay order for this booking (one per payment attempt).
+// Returns null if the booking does not exist.
+async function addPaymentOrder(id, orderId) {
+  if (!dbReady()) {
+    const b = memoryBookings.get(id);
+    if (!b) return null;
+    if (!b.payment.razorpayOrderIds.includes(orderId)) b.payment.razorpayOrderIds.push(orderId);
+    return copy(b);
+  }
+  const doc = await Booking.findOneAndUpdate(
+    { ref: String(id) },
+    { $addToSet: { 'payment.razorpayOrderIds': orderId } },
+    { new: true }
+  ).lean();
+  return doc ? shape(doc) : null;
+}
+
+// Mark a booking paid exactly once. Atomic and idempotent: the first caller flips
+// pending -> paid; any later or concurrent caller gets { alreadyPaid: true } and
+// the original booking untouched.
+// Returns null if missing, else { booking, alreadyPaid }.
+async function markBookingPaid(id, { method, demo, razorpayPaymentId }) {
+  if (!dbReady()) {
+    const b = memoryBookings.get(id);
+    if (!b) return null;
+    if (b.status === 'paid') return { booking: copy(b), alreadyPaid: true };
+    // no await between the check above and these writes, so this is atomic in-process
+    b.status = 'paid';
+    b.payment = { ...b.payment, method, demo, razorpayPaymentId, paidAt: new Date() };
+    return { booking: copy(b), alreadyPaid: false };
+  }
+  const updated = await Booking.findOneAndUpdate(
+    { ref: String(id), status: { $ne: 'paid' } },
+    {
+      $set: {
+        status: 'paid',
+        'payment.method': method,
+        'payment.demo': demo,
+        'payment.razorpayPaymentId': razorpayPaymentId,
+        'payment.paidAt': new Date(),
+      },
+    },
+    { new: true }
+  ).lean();
+  if (updated) return { booking: shape(updated), alreadyPaid: false };
+  const existing = await Booking.findOne({ ref: String(id) }).lean();
+  return existing ? { booking: shape(existing), alreadyPaid: true } : null;
+}
+
+module.exports = { createBooking, getBooking, addPaymentOrder, markBookingPaid, source, listCars, getCar, listStations, seedCars, seedStations };

@@ -51,9 +51,8 @@ export default function BookingForm({ car: fixedCar, cars = [], initialCarId = '
           addOns,
         },
       });
-      navigate('/payment', {
-        state: { bookingId: booking.id, carName: `${car.brand} ${car.name}`, amount: booking.totalINR * 100 },
-      });
+      // The payment page loads the booking from the server; the amount is never passed through the browser
+      navigate(`/payment/${booking.id}`);
     } catch (err) {
       setError(err.message);
     } finally {

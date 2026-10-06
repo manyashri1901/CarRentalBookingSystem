@@ -1,113 +1,76 @@
-/* Payment page */
+/* Payment and booking confirmation pages.
+   Card and UPI details are entered in Razorpay's own window; this site never renders a card form. */
 
-.back-button {
-  min-height: var(--tap);
-  margin-bottom: 1rem;
-  padding: 0.5rem 1.1rem;
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.back-button:hover { background: var(--surface-alt); }
+.back-link { display: inline-flex; align-items: center; min-height: var(--tap); font-weight: 600; text-decoration: none; }
+.payment-page h1 { margin-bottom: 1.25rem; }
 
-.section-header { margin-bottom: 1.5rem; text-align: center; }
-.section-header p { margin: 0; font-weight: 600; }
+.pay-layout { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+.pay-box { display: flex; flex-direction: column; gap: 1rem; align-self: start; }
+.pay-box h2,
+.pay-summary h2 { margin-bottom: 0; }
 
-.payment-options {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.25rem;
-}
+.summary-list { margin: 1rem 0 0.75rem; display: flex; flex-direction: column; }
+.summary-list > div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+.summary-list dt { color: var(--text-muted); flex: none; }
+.summary-list dd { margin: 0; font-weight: 600; text-align: right; overflow-wrap: anywhere; }
+.summary-list .summary-total { border-bottom: none; font-size: 1.2rem; }
+.summary-list .summary-total dt { color: var(--text); font-weight: 700; }
+.summary-list .summary-total dd { font-weight: 800; color: var(--accent); }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85em; }
 
-.payment-card {
+/* Mode banners: demo must be impossible to miss */
+.demo-banner,
+.test-banner {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1.25rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
+  gap: 0.25rem;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid;
+  font-size: 0.95rem;
 }
-.payment-card h2 { margin: 0; text-align: left; font-size: 1.2rem; }
+.demo-banner { background: #fff4d6; border-color: #b45309; color: #5c2d00; }
+.test-banner { background: var(--surface-alt); border-color: var(--accent); }
+:root[data-theme='dark'] .demo-banner { background: #3a2a05; border-color: #fbbf24; color: #fde68a; }
 
-.qr-code {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-}
-.qr-code img { width: 100%; max-width: 220px; height: auto; border-radius: var(--radius-sm); }
-.qr-instructions p { margin: 0.25rem 0; text-align: center; color: var(--text-muted); font-size: 0.95rem; }
+.btn-demo { background: #b45309; color: #fff; }
+.btn-demo:hover { background: #92400e; }
+:root[data-theme='dark'] .btn-demo { background: #fbbf24; color: #1f1300; }
+:root[data-theme='dark'] .btn-demo:hover { background: #fcd34d; }
 
-.card-form { display: flex; flex-direction: column; gap: 1rem; }
-.input-group { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
-.expiry-cvv { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-.card-icons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-.card-icons img { height: 24px; width: auto; object-fit: contain; }
-
-/* Success popup */
-.popup {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.55);
-}
-.popup-content {
-  position: relative;
-  width: 100%;
-  max-width: 400px;
-  padding: 2rem 1.5rem;
-  background: var(--surface);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
-  text-align: center;
-}
-.popup-message { margin: 0 0 0.5rem; font-size: 1.4rem; font-weight: 800; color: var(--success); }
-.popup-check {
+/* Confirmation */
+.confirm-head { text-align: center; margin-bottom: 1.25rem; }
+.confirm-head h1 { margin-bottom: 0.5rem; }
+.confirm-head p { margin: 0.25rem 0; }
+.confirm-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 64px;
   height: 64px;
-  margin: 0.75rem 0;
+  margin-bottom: 0.75rem;
   border-radius: 50%;
-  background: var(--success-bg);
-  color: var(--success);
   font-size: 2rem;
   font-weight: 800;
 }
-.close-button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: var(--tap);
-  height: var(--tap);
-  background: transparent;
-  border: none;
-  border-radius: 50%;
-  color: var(--text-muted);
-  font-size: 1.75rem;
-  cursor: pointer;
-}
-.close-button:hover { background: var(--surface-alt); }
+.confirm-icon.paid { background: var(--success-bg); color: var(--success); }
+.confirm-icon.demo { background: #fff4d6; color: #b45309; }
+.confirm-icon.pending, .confirm-icon.cancelled { background: var(--surface-alt); color: var(--text-muted); }
+:root[data-theme='dark'] .confirm-icon.demo { background: #3a2a05; color: #fbbf24; }
+
+.status-badge { display: inline-block; padding: 0.3rem 0.9rem; border-radius: 999px; font-weight: 700; font-size: 0.9rem; }
+.status-badge.paid { background: var(--success-bg); color: var(--success); }
+.status-badge.demo { background: #fff4d6; color: #92400e; }
+.status-badge.pending { background: var(--surface-alt); color: var(--text); }
+.status-badge.cancelled { background: var(--danger-bg); color: var(--danger); }
+:root[data-theme='dark'] .status-badge.demo { background: #3a2a05; color: #fde68a; }
+
+.confirm-page .demo-banner { margin-bottom: 1rem; }
+.row-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; justify-content: center; }
 
 @media (min-width: 768px) {
-  .payment-options { grid-template-columns: 1fr 1fr; align-items: start; }
-  .payment-card { padding: 1.75rem; }
+  .pay-layout { grid-template-columns: 1fr 1fr; }
+}
+@media print {
+  .site-header, .footer, .row-actions, .back-link { display: none !important; }
 }

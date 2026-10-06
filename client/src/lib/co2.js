@@ -10,15 +10,40 @@
 //   Petrol CO2 (tailpipe)           = litres * petrolCO2PerLitre
 //   Savings                         = petrol - EV   (for both cost and CO2)
 
+// SOURCES AND CONFIDENCE for each default. I could not look these up while writing this file, so none
+// is a verified citation. "Rule of thumb" means my own estimate, not a measured or published figure.
 export const DEFAULTS = {
-  distanceKm: 300,
-  realWorldPct: 75, // real-world range as % of the claimed ARAI/MIC range
-  chargingLossPct: 10, // energy lost between wall socket and battery
-  tariff: 15, // INR per kWh (blend of cheaper home and pricier public charging)
-  petrolKmPerLitre: 15, // typical real-world mileage of a comparable petrol car
-  petrolPricePerLitre: 100, // INR per litre (varies by city and over time)
-  petrolCO2PerLitre: 2.31, // kg CO2 per litre burned (tailpipe only)
-  gridCO2PerKWh: 0.75, // kg CO2 per kWh, Indian grid average (varies by year/source)
+  distanceKm: 300, // Arbitrary example trip length (roughly Indore to Bhopal and back)
+
+  // Rule of thumb: real-world range is commonly reported at about 70-80% of the ARAI/MIC claimed range
+  // (highway speed, AC use and load all reduce it). Check independent range tests for the specific car.
+  realWorldPct: 75,
+
+  // Rule of thumb: wall-to-battery losses on AC charging are often quoted at roughly 8-15%.
+  // Check charger and vehicle documentation or an independent charging-efficiency study.
+  chargingLossPct: 10,
+
+  // Placeholder blend, not a tariff. Home electricity in India is state-regulated and varies by state and
+  // slab (many states have a lower EV tariff); public chargers usually charge more per kWh plus GST.
+  // Check your DISCOM tariff order and your charging operator's price list.
+  tariff: 15,
+
+  // Rule of thumb for a small petrol car's real-world mileage (owner-reported figures are typically below
+  // the ARAI number). Check the real mileage of the car you would otherwise drive.
+  petrolKmPerLitre: 15,
+
+  // Approximate retail petrol price in major Indian cities in recent years (roughly Rs 95-105/L).
+  // Changes often and differs by city. Check today's price (oil marketing companies publish city prices).
+  petrolPricePerLitre: 100,
+
+  // Tailpipe CO2 per litre of petrol. Commonly used values are about 2.3 kg/L (IPCC default emission
+  // factors for motor gasoline; US EPA uses about 2.35 kg/L). Check the IPCC Guidelines or your regulator.
+  petrolCO2PerLitre: 2.31,
+
+  // Rounded placeholder for the Indian grid average. The Central Electricity Authority (CEA) publishes the
+  // "CO2 Baseline Database for the Indian Power Sector"; recent editions give roughly 0.7-0.8 kg CO2/kWh.
+  // Not verified against the latest edition: verify before relying on it. It changes each year.
+  gridCO2PerKWh: 0.75,
 };
 
 /** Reference EV for site-wide illustrative figures (Tata Nexon EV 45 kWh, 489 km claimed). */

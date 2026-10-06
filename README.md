@@ -32,6 +32,20 @@ Running costs only (no rental price, tolls, parking). CO2 is tailpipe for petrol
 ## Booking price
 Hourly up to one day, then per day; leftover hours are charged hourly but never more than a full day. Insurance Rs 299 per started day; home charger delivery Rs 499 one-off. The server recomputes the price (`server/lib/pricing.js`), so the client total is only a preview. Without `MONGO_URI`, bookings are kept in memory (demo mode) and lost on restart.
 
+## Payments (Razorpay)
+- **Demo mode (default).** With no `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET`, the payment page shows a clearly
+  labelled "Demo payment" button. It marks the booking `paid` with `payment.demo = true`; no money moves and no
+  card details are collected anywhere.
+- **Test mode.** Put your Razorpay **test** keys in `server/.env` (see `.env.example`). Checkout then opens
+  Razorpay's own window; card, UPI and netbanking details never touch this site.
+- **How it is kept honest:** the order is created server-side and the amount always comes from the saved booking,
+  never from the browser. After checkout the server verifies the HMAC-SHA256 signature
+  (`HMAC(key_secret, "<order_id>|<payment_id>")`) before marking the booking paid. Verification is idempotent, so
+  a repeated or concurrent call cannot pay a booking twice. The key secret stays on the server: it is never sent
+  to the browser and must never be committed.
+- **Tests:** `cd server && npm test` (21 checks: success, failure, tampered signature, idempotency, demo fallback).
+  They use a local fake Razorpay API and dummy keys, so no real account is needed.
+
 ## Run locally
 Requires Node 18+.
 
@@ -70,6 +84,8 @@ The API starts even without `MONGO_URI`; only database features (signup) are una
 | `server/.env` | `MONGO_URI` | MongoDB connection string |
 | `server/.env` | `CLIENT_ORIGIN` | Allowed frontend origin(s) for CORS, comma-separated |
 | `server/.env` | `PORT` | Local port (set automatically by hosts) |
+| `server/.env` | `RAZORPAY_KEY_ID` | Razorpay **test** key id; unset = demo payments |
+| `server/.env` | `RAZORPAY_KEY_SECRET` | Razorpay key secret - server only, never commit |
 | `client/.env` | `VITE_API_URL` | Base URL of the API |
 
 Never commit real `.env` files; only the `.env.example` files are tracked.
@@ -78,6 +94,8 @@ Never commit real `.env` files; only the `.env.example` files are tracked.
 1. **Database:** create a free cluster on MongoDB Atlas, add a database user, allow network access (0.0.0.0/0 for a hosted API), and copy the connection string.
 2. **API on Render:** New + > Blueprint (or Web Service), pick this repo. Root directory `server`, build `npm install`, start `npm start`. Set `MONGO_URI` and `CLIENT_ORIGIN` (the frontend URL, set it after step 3).
 3. **Frontend on Vercel (or Netlify):** import the repo, root directory `client`, framework Vite, build `npm run build`, output `dist`. Set `VITE_API_URL` to the Render API URL. `client/vercel.json` and `client/public/_redirects` handle SPA routing.
-4. Go back to Render and set `CLIENT_ORIGIN` to the final Vercel URL, then redeploy.
+4. **Payments (optional):** add `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` (test keys) in the Render dashboard.
+   Leave them unset to keep demo payments.
+5. Go back to Render and set `CLIENT_ORIGIN` to the final Vercel URL, then redeploy.
 
 Note: Render's free tier sleeps after inactivity, so the first request can take ~30-60 seconds.

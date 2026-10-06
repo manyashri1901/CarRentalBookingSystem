@@ -51,3 +51,11 @@
 @media (min-width: 1280px) {
   .assume-grid { grid-template-columns: 1fr 1fr; }
 }
+
+.assumptions-note {
+  padding: 0.8rem 1rem;
+  background: var(--surface-alt);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}

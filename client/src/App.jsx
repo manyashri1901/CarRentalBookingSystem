@@ -15,6 +15,7 @@ import Calculator from './pages/Calculator';
 import ChargingMap from './pages/ChargingMap';
 import Bookingdetail from './pages/Bookingdetail';
 import PaymentPage from './pages/PaymentPage';
+import BookingConfirmation from './pages/BookingConfirmation';
 
 const links = [
   { to: '/', label: 'Home', end: true },
@@ -33,7 +34,9 @@ function Navbar() {
   const { pathname } = useLocation();
 
   // Close the menu after navigating, and on Escape
-  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && setOpen(false);
     window.addEventListener('keydown', onKey);
@@ -97,7 +100,9 @@ function NotFound() {
 
 function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => window.scrollTo(0, 0), [pathname]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   return null;
 }
 
@@ -118,7 +123,9 @@ export default function App() {
         <Route path="/calculator" element={<Calculator />} />
         <Route path="/bookings" element={<Navigate to="/cars" replace />} />
         <Route path="/booking-detail" element={<Bookingdetail />} />
-        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/payment/:id" element={<PaymentPage />} />
+        <Route path="/payment" element={<Navigate to="/cars" replace />} />
+        <Route path="/booking/:id" element={<BookingConfirmation />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

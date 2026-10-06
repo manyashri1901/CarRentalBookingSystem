@@ -10,5 +10,9 @@ services:
     envVars:
       - key: MONGO_URI
         sync: false # paste your MongoDB Atlas URI in the Render dashboard
+      - key: RAZORPAY_KEY_ID
+        sync: false # Razorpay TEST key id (leave unset for demo payments)
+      - key: RAZORPAY_KEY_SECRET
+        sync: false # Razorpay key secret - set in the Render dashboard only, never commit
       - key: CLIENT_ORIGIN
         sync: false # your deployed frontend URL, e.g. https://your-app.vercel.app

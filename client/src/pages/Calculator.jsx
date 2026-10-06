@@ -113,6 +113,14 @@ export default function Calculator() {
         </section>
 
         <section className="calc-results" aria-labelledby="res-h" aria-live="polite">
+          <aside className="assumptions-note" role="note" aria-label="Assumptions">
+            <strong>Assumptions.</strong> These results rest on the editable values in the left panel, which are
+            placeholders and rules of thumb, not verified data: real-world range {vals.realWorldPct}% of claimed,
+            {' '}{vals.chargingLossPct}% charging loss, ₹{vals.tariff}/kWh, a petrol car doing {vals.petrolKmPerLitre} km/L
+            at ₹{vals.petrolPricePerLitre}/L, and a grid emitting {vals.gridCO2PerKWh} kg CO₂/kWh. Replace them with
+            your own numbers; the grid figure in particular changes every year.
+          </aside>
+
           <h2 id="res-h" className="left">Results for {fmt(Number(distance) || 0)} km</h2>
 
           <div className="result-cards">
