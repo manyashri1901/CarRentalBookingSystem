@@ -417,3 +417,84 @@ input:focus, select:focus, textarea:focus {
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* ---------- Account menu in the navbar ---------- */
+.account-menu { position: relative; }
+
+.account-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 0.9rem;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.account-trigger:hover { background: var(--surface-alt); }
+.account-name { max-width: 10rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.account-dropdown { display: none; flex-direction: column; }
+.account-dropdown.open { display: flex; }
+.account-email {
+  margin: 0;
+  padding: 0.5rem 0.9rem 0.25rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+.account-email .tag { margin-left: 0.4rem; background: var(--accent); color: var(--accent-contrast); }
+.account-dropdown a,
+.account-dropdown .signout {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0 0.9rem;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.account-dropdown a:hover,
+.account-dropdown .signout:hover { background: var(--surface-alt); }
+.account-dropdown .signout { color: var(--danger); }
+
+@media (min-width: 1180px) {
+  .account-trigger { border: 1px solid var(--border); }
+  .account-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 110;
+    min-width: 220px;
+    padding: 0.4rem;
+    background: var(--header-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+  }
+}

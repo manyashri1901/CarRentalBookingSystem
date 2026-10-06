@@ -3,13 +3,17 @@ require('dotenv').config();
 
 // dotenv must run before app.js reads the environment
 const app = require('./app');
+const { assertUsableSecret } = require('./lib/auth');
+
+// Stops the server in production when JWT_SECRET is missing or weak
+assertUsableSecret();
 
 const PORT = process.env.PORT || 5000;
 
 // Without MONGO_URI the API serves the seed JSON in server/data (cars, stations).
 // Start listening even if the DB is down so the host health check passes
 if (!process.env.MONGO_URI) {
-  console.warn('MONGO_URI is not set - serving cars/stations from JSON seed data; signup is unavailable and bookings are kept in memory (demo mode).');
+  console.warn('MONGO_URI is not set - serving cars/stations from JSON seed data; accounts, bookings and car edits are kept in memory (demo mode) and lost on restart.');
 } else {
   mongoose
     .connect(process.env.MONGO_URI)

@@ -6,7 +6,7 @@ const bookingSchema = new mongoose.Schema(
     // Public, unguessable id used in URLs (an ObjectId is guessable, and bookings hold a name and email)
     ref: { type: String, unique: true, default: () => crypto.randomUUID() },
     carId: { type: String, required: true, index: true }, // Car.id slug
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // set when logged in
+    userId: { type: String, index: true, default: null }, // User.ref when booked while signed in
     name: { type: String, required: true },
     email: { type: String, required: true },
     pickupLocation: { type: String, required: true },

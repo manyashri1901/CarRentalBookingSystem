@@ -1,0 +1,72 @@
+/* Admin dashboard, car management and booking list */
+
+.admin-head { text-align: center; margin-bottom: 1.25rem; }
+.admin-head h1 { margin-bottom: 0.25rem; }
+.admin-head p { margin: 0; }
+
+.tablist { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; overflow-x: auto; }
+.tablist button {
+  flex: 1 0 auto;
+  min-height: var(--tap);
+  padding: 0 1.1rem;
+  background: var(--surface-alt);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tablist button.active { background: var(--accent); color: var(--accent-contrast); border-color: var(--accent); }
+
+.msg.warn { background: #fff4d6; color: #5c2d00; border: 1px solid #b45309; }
+:root[data-theme='dark'] .msg.warn { background: #3a2a05; color: #fde68a; border-color: #fbbf24; }
+.msg code { font-family: ui-monospace, Menlo, Consolas, monospace; }
+
+/* Dashboard */
+.stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 2rem; }
+.stat { padding: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); text-align: center; }
+.stat.is-muted { border-style: dashed; }
+.stat-value { margin: 0; font-size: 1.6rem; font-weight: 800; color: var(--accent); line-height: 1.2; }
+.stat.is-muted .stat-value { color: var(--text-muted); }
+.stat-label { margin: 0.25rem 0 0; font-size: 0.82rem; color: var(--text-muted); }
+
+.plain-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.plain-list li { padding: 0.7rem 0.9rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+
+/* Panels */
+.panel-bar { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.field.inline { max-width: 220px; }
+
+/* Tables: scroll sideways on small screens rather than squashing */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--border); border-radius: var(--radius); }
+.admin-table { width: 100%; min-width: 640px; border-collapse: collapse; background: var(--surface); }
+.admin-table th,
+.admin-table td { padding: 0.7rem 0.9rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+.admin-table thead th { background: var(--surface-alt); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; position: sticky; top: 0; }
+.admin-table tbody tr:last-child th,
+.admin-table tbody tr:last-child td { border-bottom: none; }
+.admin-table tbody th { font-weight: 700; }
+.admin-table small { display: block; font-weight: 400; color: var(--text-muted); font-size: 0.78rem; }
+.nowrap-sm { white-space: nowrap; font-size: 0.85rem; }
+
+.row-actions-tight { display: flex; gap: 0.5rem; }
+.link-btn.danger { color: var(--danger); }
+
+/* Car form */
+.car-form { display: flex; flex-direction: column; gap: 1rem; }
+.form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.field-error { color: var(--danger); font-weight: 600; }
+input[aria-invalid='true'],
+select[aria-invalid='true'] { border-color: var(--danger); }
+input:disabled { background: var(--surface-alt); color: var(--text-muted); }
+
+@media (min-width: 560px) {
+  .stat-grid { grid-template-columns: repeat(3, 1fr); }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 1024px) {
+  .stat-grid { grid-template-columns: repeat(4, 1fr); }
+  .stat.wide { grid-column: span 2; }
+  .form-grid { grid-template-columns: repeat(3, 1fr); }
+}

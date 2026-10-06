@@ -15,7 +15,7 @@ render.yaml                  - Render blueprint for the API
 ```
 
 ## Pages
-`/` landing (animated hero, CO2 counter, featured EVs) - `/cars` filterable EV list (filters live in the URL) - `/cars/:id` specs, range gauge, add-ons and booking - `/map` charging stations (Leaflet + OpenStreetMap) - `/calculator` EV vs petrol trip cost and CO2 - `/booking-detail` book any EV - `/deals` - `/about` - `/contact` - `/signup`
+`/login` and `/signup` accounts - `/my-bookings` your bookings (sign-in required) - `/admin` admin dashboard (admin only) - `/` landing (animated hero, CO2 counter, featured EVs) - `/cars` filterable EV list (filters live in the URL) - `/cars/:id` specs, range gauge, add-ons and booking - `/map` charging stations (Leaflet + OpenStreetMap) - `/calculator` EV vs petrol trip cost and CO2 - `/booking-detail` book any EV - `/deals` - `/about` - `/contact` - `/signup`
 
 ## Calculator formulas
 All inputs are editable in the UI; the defaults in `client/src/lib/co2.js` are placeholders to verify.
@@ -32,6 +32,47 @@ Running costs only (no rental price, tolls, parking). CO2 is tailpipe for petrol
 ## Booking price
 Hourly up to one day, then per day; leftover hours are charged hourly but never more than a full day. Insurance Rs 299 per started day; home charger delivery Rs 499 one-off. The server recomputes the price (`server/lib/pricing.js`), so the client total is only a preview. Without `MONGO_URI`, bookings are kept in memory (demo mode) and lost on restart.
 
+## Accounts, roles and admin
+- **Sign up / sign in** issue a JSON Web Token that expires after 2 hours. Passwords are hashed with
+  bcrypt (cost 12) and never stored or returned in plain text.
+- **Roles are `user` and `admin`.** Signup always creates a `user`; a `role` sent in the request body is
+  ignored. Each request re-reads the account from the database, so the role in an old token cannot be trusted
+  or replayed after a demotion.
+- **Admins are created by hand**, never by default:
+  ```bash
+  cd server
+  npm run create-admin                                     # prompts for email and password
+  ADMIN_EMAIL=you@example.com ADMIN_PASSWORD=... npm run create-admin
+  ```
+  There are no default admin credentials anywhere in this repo. The script needs `MONGO_URI`, because
+  without a database accounts live in memory and would vanish on restart. If the address already exists it is
+  promoted to admin and its password is left alone.
+- **`/admin`** (admin only) has a dashboard, car management (add, edit, delete) and a booking list.
+  Every field is validated again on the server; the browser checks are only for fast feedback.
+- **`/my-bookings`** shows only your own bookings, and lets you cancel unpaid ones. One user cannot read or
+  cancel another user's booking: the API answers 404, so a reference cannot be probed for existence.
+  Bookings made while signed out stay reachable through their unguessable reference, which is the only way a
+  guest can see their own confirmation.
+- **Rate limits** (per IP): 10 failed sign-ins per 15 minutes and 5 new accounts per hour. Successful
+  sign-ins are not counted, so a real user cannot be locked out by their own activity.
+- **`JWT_SECRET`** is required. In production the server refuses to start if it is missing, shorter than 32
+  characters or a recognisable placeholder. In development it falls back to a random per-process secret with a
+  warning, which means logins do not survive a restart. Changing the secret signs everyone out.
+
+### Where the login token is stored, and why
+The token is kept in `localStorage`. The trade-offs:
+
+| Option | Survives refresh | Exposure |
+|---|---|---|
+| **`localStorage` (chosen)** | yes | any script on the page can read it, so an XSS bug means a stolen token |
+| `httpOnly` cookie | yes | unreadable by JavaScript, but with the API on another domain it needs `SameSite=None`, `Secure` and CSRF protection on every write |
+| memory only | no | safest against theft, but signs the user out on every refresh |
+
+With the frontend on Vercel and the API on Render they are different origins, so cookies would need
+cross-site settings plus CSRF defences. `localStorage` keeps that simple, and the risk is limited by a short
+2-hour token, no other data in storage, and no third-party scripts beyond Razorpay's checkout. If this ever
+handles real customer money at scale, move to `httpOnly` cookies with CSRF tokens and a refresh token.
+
 ## Payments (Razorpay)
 - **Demo mode (default).** With no `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET`, the payment page shows a clearly
   labelled "Demo payment" button. It marks the booking `paid` with `payment.demo = true`; no money moves and no
@@ -43,8 +84,9 @@ Hourly up to one day, then per day; leftover hours are charged hourly but never 
   (`HMAC(key_secret, "<order_id>|<payment_id>")`) before marking the booking paid. Verification is idempotent, so
   a repeated or concurrent call cannot pay a booking twice. The key secret stays on the server: it is never sent
   to the browser and must never be committed.
-- **Tests:** `cd server && npm test` (21 checks: success, failure, tampered signature, idempotency, demo fallback).
-  They use a local fake Razorpay API and dummy keys, so no real account is needed.
+- **Tests:** `cd server && npm test` runs 46 checks covering payments (success, failure, tampered signature,
+  idempotency, demo fallback) and auth (401/403 on every admin route, expired and forged tokens, booking
+  ownership, rate limiting). They use a local fake Razorpay API and dummy keys, so no real account is needed.
 
 ## Run locally
 Requires Node 18+.
@@ -86,6 +128,7 @@ The API starts even without `MONGO_URI`; only database features (signup) are una
 | `server/.env` | `PORT` | Local port (set automatically by hosts) |
 | `server/.env` | `RAZORPAY_KEY_ID` | Razorpay **test** key id; unset = demo payments |
 | `server/.env` | `RAZORPAY_KEY_SECRET` | Razorpay key secret - server only, never commit |
+| `server/.env` | `JWT_SECRET` | Signs login tokens; required in production, min 32 chars |
 | `client/.env` | `VITE_API_URL` | Base URL of the API |
 
 Never commit real `.env` files; only the `.env.example` files are tracked.
@@ -94,8 +137,10 @@ Never commit real `.env` files; only the `.env.example` files are tracked.
 1. **Database:** create a free cluster on MongoDB Atlas, add a database user, allow network access (0.0.0.0/0 for a hosted API), and copy the connection string.
 2. **API on Render:** New + > Blueprint (or Web Service), pick this repo. Root directory `server`, build `npm install`, start `npm start`. Set `MONGO_URI` and `CLIENT_ORIGIN` (the frontend URL, set it after step 3).
 3. **Frontend on Vercel (or Netlify):** import the repo, root directory `client`, framework Vite, build `npm run build`, output `dist`. Set `VITE_API_URL` to the Render API URL. `client/vercel.json` and `client/public/_redirects` handle SPA routing.
-4. **Payments (optional):** add `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` (test keys) in the Render dashboard.
+4. **Set `JWT_SECRET`** in the Render dashboard to a freshly generated random string, then run
+   `npm run create-admin` against the same `MONGO_URI` to create your admin account.
+5. **Payments (optional):** add `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` (test keys) in the Render dashboard.
    Leave them unset to keep demo payments.
-5. Go back to Render and set `CLIENT_ORIGIN` to the final Vercel URL, then redeploy.
+6. Go back to Render and set `CLIENT_ORIGIN` to the final Vercel URL, then redeploy.
 
 Note: Render's free tier sleeps after inactivity, so the first request can take ~30-60 seconds.

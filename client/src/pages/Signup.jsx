@@ -1,75 +1,96 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { API_URL } from '../api';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth';
 import '../styles/Signup.css';
 
-const Signup = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-  const [status, setStatus] = useState(null); // { type: 'success' | 'error', text }
-  const [loading, setLoading] = useState(false);
+const MIN_PASSWORD = 8; // must match the server
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+export default function Signup() {
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || '/';
+
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const onChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: undefined });
   };
 
-  const handleSubmit = async (e) => {
+  const validate = () => {
+    const next = {};
+    if (!form.name.trim()) next.name = 'Enter your name';
+    else if (form.name.trim().length > 80) next.name = 'Name must be at most 80 characters';
+    if (!form.email.trim()) next.email = 'Enter your email address';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = 'That does not look like an email address';
+    if (!form.password) next.password = 'Choose a password';
+    else if (form.password.length < MIN_PASSWORD) next.password = `Use at least ${MIN_PASSWORD} characters`;
+    else if (new Blob([form.password]).size > 72) next.password = 'That password is too long (72 bytes maximum)';
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setStatus(null);
+    setFormError('');
+    if (!validate()) return;
+    setBusy(true);
     try {
-      const res = await fetch(`${API_URL}/api/auth/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      setStatus({ type: res.ok ? 'success' : 'error', text: data.message });
-      if (res.ok) setFormData({ name: '', email: '', password: '' });
+      await signUp(form.name.trim(), form.email.trim(), form.password);
+      navigate(from, { replace: true });
     } catch (err) {
-      console.error(err);
-      setStatus({ type: 'error', text: 'Error signing up. Is the server running?' });
+      setFormError(err.message);
     } finally {
-      setLoading(false);
+      setBusy(false);
     }
   };
 
   return (
     <main className="page signup-page">
-      <form className="card signup-form" onSubmit={handleSubmit}>
+      <form className="card signup-form" onSubmit={onSubmit} noValidate>
         <h1>Create your account</h1>
         <p className="muted">Sign up to manage your bookings.</p>
 
         <label className="field">
           <span>Name</span>
-          <input name="name" value={formData.name} onChange={handleChange}
-            placeholder="Your name" autoComplete="name" required />
+          <input name="name" value={form.name} onChange={onChange} autoComplete="name" placeholder="Your name"
+            aria-invalid={!!errors.name} aria-describedby={errors.name ? 'name-err' : undefined} />
+          {errors.name && <small id="name-err" className="field-error">{errors.name}</small>}
         </label>
+
         <label className="field">
           <span>Email</span>
-          <input name="email" type="email" value={formData.email} onChange={handleChange}
-            placeholder="you@example.com" autoComplete="email" required />
+          <input name="email" type="email" value={form.email} onChange={onChange} autoComplete="email"
+            placeholder="you@example.com" aria-invalid={!!errors.email} aria-describedby={errors.email ? 'email-err' : undefined} />
+          {errors.email && <small id="email-err" className="field-error">{errors.email}</small>}
         </label>
+
         <label className="field">
           <span>Password</span>
-          <input name="password" type="password" value={formData.password} onChange={handleChange}
-            placeholder="At least 6 characters" autoComplete="new-password" minLength={6} required />
+          <input name="password" type="password" value={form.password} onChange={onChange} autoComplete="new-password"
+            placeholder={`At least ${MIN_PASSWORD} characters`}
+            aria-invalid={!!errors.password} aria-describedby={errors.password ? 'pw-err' : 'pw-hint'} />
+          {errors.password ? (
+            <small id="pw-err" className="field-error">{errors.password}</small>
+          ) : (
+            <small id="pw-hint" className="muted">At least {MIN_PASSWORD} characters. A few random words works well.</small>
+          )}
         </label>
 
-        <button type="submit" className="btn btn-block" disabled={loading}>
-          {loading ? 'Signing up…' : 'Sign Up'}
+        <button type="submit" className="btn btn-block" disabled={busy}>
+          {busy ? 'Creating account…' : 'Sign Up'}
         </button>
 
-        {status && (
-          <p role="status" className={status.type === 'success' ? 'msg success' : 'msg error'}>
-            {status.text}
-          </p>
-        )}
+        {formError && <p role="alert" className="msg error">{formError}</p>}
+
         <p className="muted small center">
-          Ready to drive? <Link to="/cars">Browse cars</Link>
+          Already have an account? <Link to="/login" state={location.state}>Sign in</Link>
         </p>
       </form>
     </main>
   );
-};
-
-export default Signup;
+}

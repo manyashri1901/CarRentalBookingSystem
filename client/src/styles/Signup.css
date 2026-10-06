@@ -15,3 +15,11 @@
   .signup-page { padding-top: 3rem; }
   .signup-form { padding: 2rem; }
 }
+
+/* The link that swaps between sign in and sign up is the main way to switch, so give it
+   a comfortable tap area without breaking the sentence it sits in. */
+.signup-form .muted.small a {
+  display: inline-block;
+  padding: 0.5rem 0.35rem;
+  font-weight: 600;
+}

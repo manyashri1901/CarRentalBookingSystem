@@ -2,6 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 
 export const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
+// Set by the auth provider; attached to every request as a Bearer token.
+let authToken = null;
+export const setAuthToken = (token) => {
+  authToken = token || null;
+};
+
 function toQuery(params = {}) {
   const sp = new URLSearchParams();
   Object.entries(params).forEach(([k, v]) => {
@@ -17,7 +23,10 @@ export async function apiRequest(path, { method = 'GET', params, body, signal } 
     res = await fetch(`${API_URL}${path}${toQuery(params)}`, {
       method,
       signal,
-      headers: body ? { 'Content-Type': 'application/json' } : undefined,
+      headers: {
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      },
       body: body ? JSON.stringify(body) : undefined,
     });
   } catch (err) {

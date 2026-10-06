@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const Car = require('../models/Car');
 const Station = require('../models/Station');
 const Booking = require('../models/Booking');
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const seedCars = require('../data/cars.json');
 const seedStations = require('../data/stations.json');
@@ -14,8 +16,12 @@ const source = () => (dbReady() ? 'mongodb' : 'json');
 
 const clean = (docs) => docs.map(({ _id, __v, ...rest }) => rest);
 
+// Demo mode (no MONGO_URI) keeps an editable copy of the seed fleet in memory so the
+// admin pages work locally. Changes are lost when the server restarts.
+const memoryCars = new Map(structuredClone(seedCars).map((c) => [c.id, c]));
+
 async function allCars() {
-  if (!dbReady()) return seedCars;
+  if (!dbReady()) return structuredClone([...memoryCars.values()]);
   return clean(await Car.find().lean());
 }
 
@@ -144,4 +150,162 @@ async function markBookingPaid(id, { method, demo, razorpayPaymentId }) {
   return existing ? { booking: shape(existing), alreadyPaid: true } : null;
 }
 
-module.exports = { createBooking, getBooking, addPaymentOrder, markBookingPaid, source, listCars, getCar, listStations, seedCars, seedStations };
+// ---------- Cars: admin writes ----------
+
+async function createCar(data) {
+  if (!dbReady()) {
+    if (memoryCars.has(data.id)) return null; // duplicate
+    memoryCars.set(data.id, structuredClone(data));
+    return structuredClone(data);
+  }
+  if (await Car.findOne({ id: data.id }).lean()) return null;
+  const doc = await Car.create(data);
+  const { _id, __v, ...rest } = doc.toObject();
+  return rest;
+}
+
+/** Partial update. Returns the updated car, or null if there is no such car. */
+async function updateCar(id, patch) {
+  if (!dbReady()) {
+    const car = memoryCars.get(id);
+    if (!car) return null;
+    Object.assign(car, patch);
+    return structuredClone(car);
+  }
+  const doc = await Car.findOneAndUpdate({ id }, { $set: patch }, { new: true, runValidators: true }).lean();
+  if (!doc) return null;
+  const { _id, __v, ...rest } = doc;
+  return rest;
+}
+
+async function deleteCar(id) {
+  if (!dbReady()) return memoryCars.delete(id);
+  const res = await Car.deleteOne({ id });
+  return res.deletedCount > 0;
+}
+
+// ---------- Users ----------
+// Same dual mode as bookings: MongoDB when connected, otherwise in memory for local demos.
+const memoryUsers = new Map(); // id -> user (with password hash)
+const memoryUsersByEmail = new Map(); // email -> id
+
+const publicUser = ({ password, ...u }) => u; // never leak the hash
+
+async function createUser({ name, email, password, role = 'user' }) {
+  const hash = await bcrypt.hash(password, 12);
+  const lower = email.toLowerCase().trim();
+  if (!dbReady()) {
+    if (memoryUsersByEmail.has(lower)) return null; // already exists
+    const user = { id: crypto.randomUUID(), name: name.trim(), email: lower, password: hash, role, createdAt: new Date() };
+    memoryUsers.set(user.id, user);
+    memoryUsersByEmail.set(lower, user.id);
+    return publicUser(structuredClone(user));
+  }
+  if (await User.findOne({ email: lower }).lean()) return null;
+  try {
+    const doc = await User.create({ name: name.trim(), email: lower, password: hash, role });
+    return publicUser(shape(doc.toObject()));
+  } catch (err) {
+    if (err.code === 11000) return null; // unique index lost a race
+    throw err;
+  }
+}
+
+/** Includes the password hash: for sign-in only. */
+async function getUserByEmailWithHash(email) {
+  const lower = String(email || '').toLowerCase().trim();
+  if (!dbReady()) {
+    const id = memoryUsersByEmail.get(lower);
+    return id ? structuredClone(memoryUsers.get(id)) : null;
+  }
+  const doc = await User.findOne({ email: lower }).lean();
+  return doc ? shape(doc) : null;
+}
+
+async function getUserById(id) {
+  if (!dbReady()) {
+    const u = memoryUsers.get(String(id));
+    return u ? publicUser(structuredClone(u)) : null;
+  }
+  const doc = await User.findOne({ ref: String(id) }).lean();
+  return doc ? publicUser(shape(doc)) : null;
+}
+
+async function setUserRole(email, role) {
+  const lower = String(email).toLowerCase().trim();
+  if (!dbReady()) {
+    const id = memoryUsersByEmail.get(lower);
+    if (!id) return null;
+    memoryUsers.get(id).role = role;
+    return publicUser(structuredClone(memoryUsers.get(id)));
+  }
+  const doc = await User.findOneAndUpdate({ email: lower }, { $set: { role } }, { new: true }).lean();
+  return doc ? publicUser(shape(doc)) : null;
+}
+
+async function countUsers() {
+  if (!dbReady()) return memoryUsers.size;
+  return User.countDocuments();
+}
+
+// ---------- Bookings: listing, ownership, status ----------
+
+/** Bookings owned by one user, newest first. */
+async function listBookingsByUser(userId) {
+  if (!dbReady()) {
+    return [...memoryBookings.values()]
+      .filter((b) => b.userId === userId)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .map(copy);
+  }
+  const docs = await Booking.find({ userId: String(userId) }).sort({ createdAt: -1 }).lean();
+  return docs.map(shape);
+}
+
+/** All bookings (admin), newest first. */
+async function listAllBookings({ status } = {}) {
+  if (!dbReady()) {
+    return [...memoryBookings.values()]
+      .filter((b) => !status || b.status === status)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .map(copy);
+  }
+  const docs = await Booking.find(status ? { status } : {}).sort({ createdAt: -1 }).lean();
+  return docs.map(shape);
+}
+
+/**
+ * Change a booking's status. `expected` restricts which current status may change
+ * (used so a customer can only cancel a booking that is still pending).
+ * Returns { booking } on success, { conflict: <current status> } if `expected` did not match, or null if missing.
+ */
+async function setBookingStatus(id, status, { expected } = {}) {
+  if (!dbReady()) {
+    const b = memoryBookings.get(id);
+    if (!b) return null;
+    if (expected && b.status !== expected) return { conflict: b.status };
+    b.status = status;
+    return { booking: copy(b) };
+  }
+  const filter = { ref: String(id), ...(expected ? { status: expected } : {}) };
+  const doc = await Booking.findOneAndUpdate(filter, { $set: { status } }, { new: true }).lean();
+  if (doc) return { booking: shape(doc) };
+  const existing = await Booking.findOne({ ref: String(id) }).lean();
+  if (!existing) return null;
+  return { conflict: existing.status };
+}
+
+module.exports = {
+  source,
+  // cars
+  listCars, getCar, createCar, updateCar, deleteCar,
+  // stations
+  listStations,
+  // bookings
+  createBooking, getBooking, addPaymentOrder, markBookingPaid,
+  listBookingsByUser, listAllBookings, setBookingStatus,
+  // users
+  createUser, getUserByEmailWithHash, getUserById, setUserRole, countUsers,
+  // seed data
+  seedCars, seedStations,
+};
