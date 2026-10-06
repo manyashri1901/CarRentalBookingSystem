@@ -5,6 +5,8 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
 const dealsRoutes = require('./routes/deals');
+const carsRoutes = require('./routes/cars');
+const stationsRoutes = require('./routes/stations');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,10 +26,13 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/deals', dealsRoutes);
+app.use('/api/cars', carsRoutes);
+app.use('/api/stations', stationsRoutes);
 
-// Start listening even if the DB is down so the host's health check passes
+// Without MONGO_URI the API serves the seed JSON in server/data (cars, stations).
+// Start listening even if the DB is down so the host health check passes
 if (!process.env.MONGO_URI) {
-  console.warn('MONGO_URI is not set - database features (signup) will not work.');
+  console.warn('MONGO_URI is not set - serving cars/stations from JSON seed data; signup and bookings are unavailable.');
 } else {
   mongoose
     .connect(process.env.MONGO_URI)

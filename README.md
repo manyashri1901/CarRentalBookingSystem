@@ -33,6 +33,19 @@ npm run dev               # http://localhost:5173
 
 The API starts even without `MONGO_URI`; only database features (signup) are unavailable until it is set.
 
+## Data: EV fleet and charging stations
+- `server/data/cars.json` - 14 EVs sold in India, with battery (kWh), range (km), fast/normal charging time, connector, top speed, seats and INR price per hour/day.
+- `server/data/stations.json` - 15 illustrative charging stations across major cities.
+- **No `MONGO_URI`?** The API serves these JSON files directly (responses include `"source": "json"`), so everything read-only works with no database.
+- **With MongoDB:** set `MONGO_URI` in `server/.env`, run `npm run seed` in `server/` (idempotent upsert), and the API reads from the database (`"source": "mongodb"`).
+- **Specs are approximate.** Each car has `specsApproximate: true` and a `specsNote` naming the figures to verify. Check them against the manufacturers' official pages before publishing. Station locations are illustrative, not live data.
+- Car photos are in `client/public/cars/`, from Wikimedia Commons under CC licences (CC0 / CC BY / CC BY-SA); the credit for each is in `cars.json` (`imageCredit`).
+
+### API
+- `GET /api/cars` - filters: `brand` (comma list), `type`, `connector`, `minRange`, `maxRange`, `minBattery`, `maxBattery`, `minSeats`, `minPrice`, `maxPrice` (per day), `fastCharging=true|false`, `q`, `sort=price_asc|price_desc|range_desc|battery_desc|rating_desc`
+- `GET /api/cars/:id`
+- `GET /api/stations` - filters: `city`, `connector`
+
 ## Environment variables
 | File | Variable | Purpose |
 |------|----------|---------|

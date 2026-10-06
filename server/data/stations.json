@@ -1,0 +1,347 @@
+[
+  {
+    "id": "del-cp",
+    "name": "EZ Charge - Connaught Place",
+    "operator": "Tata Power",
+    "city": "Delhi",
+    "area": "Connaught Place",
+    "lat": 28.6315,
+    "lng": 77.2167,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 60,
+        "count": 2
+      },
+      {
+        "type": "Type 2",
+        "powerKW": 22,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 18
+  },
+  {
+    "id": "del-aero",
+    "name": "Aerocity Fast Charge",
+    "operator": "Statiq",
+    "city": "Delhi",
+    "area": "Aerocity",
+    "lat": 28.5494,
+    "lng": 77.121,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 120,
+        "count": 2
+      },
+      {
+        "type": "Type 2",
+        "powerKW": 22,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 20
+  },
+  {
+    "id": "ggn-cyber",
+    "name": "Cyber Hub Charging",
+    "operator": "ChargeZone",
+    "city": "Gurugram",
+    "area": "Cyber City",
+    "lat": 28.495,
+    "lng": 77.089,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 60,
+        "count": 2
+      },
+      {
+        "type": "CHAdeMO",
+        "powerKW": 50,
+        "count": 1
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 19
+  },
+  {
+    "id": "mum-bkc",
+    "name": "BKC Charging Hub",
+    "operator": "Tata Power",
+    "city": "Mumbai",
+    "area": "Bandra Kurla Complex",
+    "lat": 19.0674,
+    "lng": 72.8683,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 60,
+        "count": 3
+      },
+      {
+        "type": "Type 2",
+        "powerKW": 22,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 21
+  },
+  {
+    "id": "mum-andheri",
+    "name": "Andheri Charge Point",
+    "operator": "Statiq",
+    "city": "Mumbai",
+    "area": "Andheri East",
+    "lat": 19.1136,
+    "lng": 72.8697,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 30,
+        "count": 2
+      },
+      {
+        "type": "CHAdeMO",
+        "powerKW": 50,
+        "count": 1
+      },
+      {
+        "type": "Bharat AC001",
+        "powerKW": 3.3,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 20
+  },
+  {
+    "id": "pun-hinj",
+    "name": "Hinjewadi Charge Hub",
+    "operator": "ChargeZone",
+    "city": "Pune",
+    "area": "Hinjewadi",
+    "lat": 18.5912,
+    "lng": 73.7389,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 60,
+        "count": 2
+      },
+      {
+        "type": "Type 2",
+        "powerKW": 22,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 18
+  },
+  {
+    "id": "blr-kora",
+    "name": "Koramangala Charging",
+    "operator": "Statiq",
+    "city": "Bengaluru",
+    "area": "Koramangala",
+    "lat": 12.9352,
+    "lng": 77.6245,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 30,
+        "count": 2
+      },
+      {
+        "type": "Type 2",
+        "powerKW": 22,
+        "count": 3
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 19
+  },
+  {
+    "id": "blr-white",
+    "name": "Whitefield Pulse Hub",
+    "operator": "Jio-bp pulse",
+    "city": "Bengaluru",
+    "area": "Whitefield",
+    "lat": 12.9698,
+    "lng": 77.75,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 120,
+        "count": 2
+      },
+      {
+        "type": "Type 2",
+        "powerKW": 22,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 21
+  },
+  {
+    "id": "blr-airport",
+    "name": "Airport Road Fast Charge",
+    "operator": "Tata Power",
+    "city": "Bengaluru",
+    "area": "Kempegowda Airport Road",
+    "lat": 13.1989,
+    "lng": 77.7068,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 60,
+        "count": 4
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 20
+  },
+  {
+    "id": "hyd-hitec",
+    "name": "HITEC City Charge Hub",
+    "operator": "ChargeZone",
+    "city": "Hyderabad",
+    "area": "HITEC City",
+    "lat": 17.4435,
+    "lng": 78.3772,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 60,
+        "count": 2
+      },
+      {
+        "type": "Type 2",
+        "powerKW": 22,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 18
+  },
+  {
+    "id": "che-omr",
+    "name": "OMR Charging Station",
+    "operator": "Tata Power",
+    "city": "Chennai",
+    "area": "Old Mahabalipuram Road",
+    "lat": 12.901,
+    "lng": 80.2279,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 60,
+        "count": 2
+      },
+      {
+        "type": "Bharat AC001",
+        "powerKW": 3.3,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 18
+  },
+  {
+    "id": "kol-saltlake",
+    "name": "Salt Lake Charge Point",
+    "operator": "Statiq",
+    "city": "Kolkata",
+    "area": "Salt Lake Sector V",
+    "lat": 22.5867,
+    "lng": 88.417,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 30,
+        "count": 2
+      },
+      {
+        "type": "Type 2",
+        "powerKW": 22,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 17
+  },
+  {
+    "id": "amd-sg",
+    "name": "SG Highway Charging",
+    "operator": "Tata Power",
+    "city": "Ahmedabad",
+    "area": "SG Highway",
+    "lat": 23.03,
+    "lng": 72.507,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 60,
+        "count": 2
+      },
+      {
+        "type": "Type 2",
+        "powerKW": 22,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 17
+  },
+  {
+    "id": "jai-malviya",
+    "name": "Malviya Nagar Charge Hub",
+    "operator": "ChargeZone",
+    "city": "Jaipur",
+    "area": "Malviya Nagar",
+    "lat": 26.853,
+    "lng": 75.81,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 60,
+        "count": 2
+      },
+      {
+        "type": "CHAdeMO",
+        "powerKW": 50,
+        "count": 1
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 17
+  },
+  {
+    "id": "ind-vijay",
+    "name": "Vijay Nagar Charging",
+    "operator": "Tata Power",
+    "city": "Indore",
+    "area": "Vijay Nagar",
+    "lat": 22.7533,
+    "lng": 75.8937,
+    "connectors": [
+      {
+        "type": "CCS2",
+        "powerKW": 60,
+        "count": 2
+      },
+      {
+        "type": "Type 2",
+        "powerKW": 22,
+        "count": 2
+      }
+    ],
+    "open24x7": true,
+    "pricePerKWh": 17
+  }
+]
