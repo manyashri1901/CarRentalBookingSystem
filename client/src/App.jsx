@@ -12,12 +12,14 @@ import Deals from './pages/Deals';
 import Cars from './pages/Cars';
 import CarDetail from './pages/CarDetail';
 import Calculator from './pages/Calculator';
+import ChargingMap from './pages/ChargingMap';
 import Bookingdetail from './pages/Bookingdetail';
 import PaymentPage from './pages/PaymentPage';
 
 const links = [
   { to: '/', label: 'Home', end: true },
   { to: '/cars', label: 'Cars' },
+  { to: '/map', label: 'Charging map' },
   { to: '/calculator', label: 'Calculator' },
   { to: '/deals', label: 'Deals' },
   { to: '/booking-detail', label: 'Booking Details' },
@@ -112,6 +114,7 @@ export default function App() {
         <Route path="/deals" element={<Deals />} />
         <Route path="/cars" element={<Cars />} />
         <Route path="/cars/:id" element={<CarDetail />} />
+        <Route path="/map" element={<ChargingMap />} />
         <Route path="/calculator" element={<Calculator />} />
         <Route path="/bookings" element={<Navigate to="/cars" replace />} />
         <Route path="/booking-detail" element={<Bookingdetail />} />
