@@ -6,8 +6,12 @@ services:
     buildCommand: npm install
     startCommand: npm start
     plan: free
-    healthCheckPath: /
+    healthCheckPath: /health
     envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true # Render generates a strong random secret; or paste your own
       - key: MONGO_URI
         sync: false # paste your MongoDB Atlas URI in the Render dashboard
       - key: RAZORPAY_KEY_ID

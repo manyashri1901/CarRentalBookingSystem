@@ -2,6 +2,15 @@
 
 Full-stack EV rental platform: React frontend, Express backend, MongoDB database.
 
+## Live URLs
+Fill these in after deploying:
+
+| What | URL |
+|---|---|
+| Frontend (Vercel) | `https://________.vercel.app` |
+| API (Render) | `https://________.onrender.com` |
+| API health check | `https://________.onrender.com/health` |
+
 ## Tech stack
 - **Frontend:** React 18, React Router 6, Vite, plain CSS (mobile-first, responsive)
 - **Backend:** Node.js, Express 5
@@ -119,6 +128,7 @@ The API starts even without `MONGO_URI`; only database features (signup) are una
 - `GET /api/cars` - filters: `brand` (comma list), `type`, `connector`, `minRange`, `maxRange`, `minBattery`, `maxBattery`, `minSeats`, `minPrice`, `maxPrice` (per day), `fastCharging=true|false`, `q`, `sort=price_asc|price_desc|range_desc|battery_desc|rating_desc`
 - `GET /api/cars/:id`
 - `GET /api/stations` - filters: `city`, `connector`
+- `GET /health` - deployment health: database, payment mode and whether the auth secret is set (no secrets revealed)
 
 ## Environment variables
 | File | Variable | Purpose |
@@ -133,14 +143,8 @@ The API starts even without `MONGO_URI`; only database features (signup) are una
 
 Never commit real `.env` files; only the `.env.example` files are tracked.
 
-## Deploy (free)
-1. **Database:** create a free cluster on MongoDB Atlas, add a database user, allow network access (0.0.0.0/0 for a hosted API), and copy the connection string.
-2. **API on Render:** New + > Blueprint (or Web Service), pick this repo. Root directory `server`, build `npm install`, start `npm start`. Set `MONGO_URI` and `CLIENT_ORIGIN` (the frontend URL, set it after step 3).
-3. **Frontend on Vercel (or Netlify):** import the repo, root directory `client`, framework Vite, build `npm run build`, output `dist`. Set `VITE_API_URL` to the Render API URL. `client/vercel.json` and `client/public/_redirects` handle SPA routing.
-4. **Set `JWT_SECRET`** in the Render dashboard to a freshly generated random string, then run
-   `npm run create-admin` against the same `MONGO_URI` to create your admin account.
-5. **Payments (optional):** add `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` (test keys) in the Render dashboard.
-   Leave them unset to keep demo payments.
-6. Go back to Render and set `CLIENT_ORIGIN` to the final Vercel URL, then redeploy.
+## Deploy
+Step-by-step instructions, with every value and where it comes from, are in **[DEPLOYMENT.md](DEPLOYMENT.md)**.
+In short: MongoDB Atlas (free tier) for the database, Render for the API (root directory `server`) and Vercel
+for the frontend (root directory `client`).
 
-Note: Render's free tier sleeps after inactivity, so the first request can take ~30-60 seconds.

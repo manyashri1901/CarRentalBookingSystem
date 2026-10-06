@@ -1,5 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const razorpay = require('./lib/razorpay');
+const { secretProblem } = require('./lib/auth');
 
 const authRoutes = require('./routes/auth');
 const dealsRoutes = require('./routes/deals');
@@ -27,6 +30,23 @@ app.use(express.json({ limit: '100kb' }));
 // Health check
 app.get('/', (req, res) => {
   res.send('API running');
+});
+
+/**
+ * GET /health - used by the host's health check and handy for diagnosing a deploy.
+ * Reports which back-ends are wired up; never reveals a secret, only whether one is set.
+ */
+app.get('/health', (req, res) => {
+  const dbState = ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState] || 'unknown';
+  const dbConfigured = !!process.env.MONGO_URI;
+  res.json({
+    status: 'ok', // the process is up; see `degraded` for whether it is fully configured
+    uptimeSeconds: Math.round(process.uptime()),
+    database: dbConfigured ? dbState : 'not configured (serving seed JSON, data kept in memory)',
+    payments: razorpay.mode(), // "razorpay" or "demo"
+    authSecret: secretProblem(process.env.JWT_SECRET) ? 'weak or missing' : 'configured',
+    degraded: !dbConfigured || dbState !== 'connected',
+  });
 });
 
 app.use('/api/auth', authRoutes);
