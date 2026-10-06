@@ -1,97 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { useApi } from "../api";
+import BookingForm from "../components/BookingForm";
+import "../styles/CarDetail.css";
 import "../styles/Bookingdetail.css";
 
-const carOptions = [
-  "Hyundai i20",
-  "Maruti Swift",
-  "Toyota Innova Crysta",
-  "Mercedes E-Class",
-];
-
+// Booking Details: pick any EV from the live fleet and book it.
+// /booking-detail?car=tata-nexon-ev preselects a car.
 const Bookingdetail = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    pickupLocation: "",
-    pickupDate: "",
-    pickupTime: "",
-    dropoffDate: "",
-    dropoffTime: "",
-    carName: "",
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("Booking Confirmed!\n\n" + JSON.stringify(formData, null, 2));
-    // You can replace this with an API call or navigation to success page
-  };
-
-  const today = new Date().toISOString().split("T")[0];
+  const [params] = useSearchParams();
+  const { data, loading, error, reload } = useApi("/api/cars", { sort: "price_asc" });
+  const cars = data?.cars || [];
 
   return (
     <main className="page narrow booking-details-container">
       <h1>📝 Booking Details</h1>
-      <form className="card booking-form" onSubmit={handleSubmit}>
-        <label className="field">
-          <span>Car selected</span>
-          <select name="carName" value={formData.carName} onChange={handleChange} required>
-            <option value="">-- Select a car --</option>
-            {carOptions.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-        </label>
+      <p className="muted center">
+        Choose your EV and trip details. Prefer to compare first? <Link to="/cars">Browse all EVs</Link>.
+      </p>
 
-        <label className="field">
-          <span>Your name</span>
-          <input type="text" name="name" placeholder="Manya" autoComplete="name"
-            value={formData.name} onChange={handleChange} required />
-        </label>
+      <div className="card booking-form-card">
+        {loading && !data && <p className="muted" aria-busy="true">Loading cars…</p>}
 
-        <label className="field">
-          <span>Email</span>
-          <input type="email" name="email" placeholder="manya@example.com" autoComplete="email"
-            value={formData.email} onChange={handleChange} required />
-        </label>
+        {error && !data && (
+          <div className="state-box" role="alert">
+            <p className="muted">{error.message}</p>
+            <button type="button" className="btn" onClick={reload}>Try again</button>
+          </div>
+        )}
 
-        <label className="field">
-          <span>Pickup location</span>
-          <input type="text" name="pickupLocation" placeholder="Indore"
-            value={formData.pickupLocation} onChange={handleChange} required />
-        </label>
-
-        <div className="form-row">
-          <label className="field">
-            <span>Pickup date</span>
-            <input type="date" name="pickupDate" min={today}
-              value={formData.pickupDate} onChange={handleChange} required />
-          </label>
-          <label className="field">
-            <span>Pickup time</span>
-            <input type="time" name="pickupTime"
-              value={formData.pickupTime} onChange={handleChange} required />
-          </label>
-        </div>
-
-        <div className="form-row">
-          <label className="field">
-            <span>Drop-off date</span>
-            <input type="date" name="dropoffDate" min={formData.pickupDate || today}
-              value={formData.dropoffDate} onChange={handleChange} required />
-          </label>
-          <label className="field">
-            <span>Drop-off time</span>
-            <input type="time" name="dropoffTime"
-              value={formData.dropoffTime} onChange={handleChange} required />
-          </label>
-        </div>
-
-        <button type="submit" className="btn btn-block">Confirm Booking</button>
-      </form>
+        {data && <BookingForm cars={cars} initialCarId={params.get("car") || ""} />}
+      </div>
     </main>
   );
 };
