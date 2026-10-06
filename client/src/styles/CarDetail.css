@@ -1,0 +1,110 @@
+/* Car detail page + booking form (also used on the Booking Details page) */
+
+.crumbs { margin-bottom: 0.75rem; }
+.crumbs a { display: inline-flex; align-items: center; min-height: var(--tap); font-weight: 600; text-decoration: none; }
+.h-sm { font-size: 1.4rem; }
+h2.left { text-align: left; }
+
+.detail-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+.detail-main { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
+
+.detail-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.75rem; }
+.detail-head h1 { text-align: left; margin: 0; }
+.detail-head p { margin: 0.25rem 0 0; }
+.detail-price { text-align: right; }
+.detail-price strong { font-size: 1.8rem; font-weight: 800; }
+.detail-price span { color: var(--text-muted); }
+.detail-price small { display: block; color: var(--text-muted); }
+
+.detail-figure { margin: 0; }
+.detail-img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--surface-alt);
+  box-shadow: var(--shadow-sm);
+}
+.detail-img.placeholder { display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+.detail-figure figcaption { margin-top: 0.4rem; font-size: 0.75rem; color: var(--text-muted); }
+.detail-skel { height: 320px; border-radius: var(--radius); }
+
+/* Gauge */
+.gauge-card {
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+.gauge { position: relative; width: 100%; max-width: 320px; margin: 0 auto; }
+.gauge svg { display: block; width: 100%; height: auto; }
+.gauge-arc { animation: gauge-in 1s ease-out; }
+@keyframes gauge-in { from { stroke-dasharray: 0 400; } }
+.gauge-label { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; line-height: 1.1; }
+.gauge-label strong { font-size: 2.4rem; font-weight: 800; }
+.gauge-label span { font-size: 0.85rem; color: var(--text-muted); }
+.gauge-sub { margin: 0.75rem 0 1rem; color: var(--text-muted); }
+.gauge-sub strong { color: var(--text); }
+
+.battery-bar {
+  position: relative;
+  height: 40px;
+  overflow: hidden;
+  background: var(--surface-alt);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+}
+.battery-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--bolt)); opacity: 0.85; }
+.battery-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--text);
+  text-shadow: 0 0 6px var(--surface), 0 0 2px var(--surface);
+}
+
+/* Specs */
+.specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 0; }
+.spec { padding: 0.8rem 0.9rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.spec dt { font-size: 0.78rem; color: var(--text-muted); }
+.spec dd { margin: 0.15rem 0 0; font-weight: 700; }
+.spec-note { margin: 0.75rem 0 0; }
+
+/* Booking card */
+.detail-book { padding: 1.25rem; }
+.detail-book h2 { margin-bottom: 1rem; }
+
+.booking-form { display: flex; flex-direction: column; gap: 1rem; }
+/* date/time pickers are stacked: side by side they truncate in the narrow sidebar */
+.form-row { display: flex; flex-direction: column; gap: 1rem; }
+
+.addons { margin: 0; padding: 0; border: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.addons legend { font-size: 0.9rem; font-weight: 600; padding: 0; margin-bottom: 0.4rem; }
+.addon {
+  align-items: flex-start;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.addon:has(input:checked) { border-color: var(--accent); background: var(--surface-alt); }
+.addon input { margin-top: 0.15rem; flex: none; }
+.addon span { display: flex; flex-direction: column; }
+.addon small { color: var(--text-muted); }
+
+.price-summary { padding: 0.9rem 1rem; background: var(--surface-alt); border-radius: var(--radius-sm); }
+.sum-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.2rem 0; font-size: 0.95rem; }
+.sum-row.total { margin-top: 0.4rem; padding-top: 0.6rem; border-top: 1px solid var(--border); font-size: 1.15rem; font-weight: 800; }
+.price-summary p { margin: 0; }
+
+@media (min-width: 768px) {
+  .specs-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1024px) {
+  .detail-grid { grid-template-columns: minmax(0, 1.5fr) minmax(340px, 1fr); gap: 2rem; align-items: start; }
+  .detail-book { position: sticky; top: 76px; padding: 1.5rem; }
+}

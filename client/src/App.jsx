@@ -9,6 +9,7 @@ import Signup from './pages/Signup';
 import Contact from './pages/Contact';
 import Deals from './pages/Deals';
 import Cars from './pages/Cars';
+import CarDetail from './pages/CarDetail';
 import Bookingdetail from './pages/Bookingdetail';
 import PaymentPage from './pages/PaymentPage';
 
@@ -107,6 +108,7 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/deals" element={<Deals />} />
         <Route path="/cars" element={<Cars />} />
+        <Route path="/cars/:id" element={<CarDetail />} />
         <Route path="/bookings" element={<Navigate to="/cars" replace />} />
         <Route path="/booking-detail" element={<Bookingdetail />} />
         <Route path="/payment" element={<PaymentPage />} />
