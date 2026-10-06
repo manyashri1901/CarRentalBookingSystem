@@ -1,0 +1,104 @@
+/* Home page: hero, search card, FAQ accordion */
+
+.hero {
+  padding: 2.5rem 1rem 3rem;
+  background: linear-gradient(135deg, #3b4cca 0%, #6a3fb5 100%);
+  color: #fff;
+}
+.hero-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+.hero h1 { color: #fff; margin-bottom: 0.5rem; }
+.hero p { margin: 0 0 1.5rem; font-size: 1.05rem; opacity: 0.95; }
+
+.search-bar {
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow-md);
+  text-align: left;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.tabs button {
+  flex: 1;
+  min-height: var(--tap);
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.tabs button:hover { background: var(--border); }
+.tabs button.active { background: var(--accent); color: var(--accent-contrast); }
+
+.inputs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  align-items: end;
+}
+
+@media (min-width: 640px) {
+  .inputs { grid-template-columns: 1fr 1fr; }
+  .search-btn { grid-column: 1 / -1; }
+}
+@media (min-width: 1024px) {
+  .inputs { grid-template-columns: 1.2fr 1fr 1fr auto; }
+  .search-btn { grid-column: auto; }
+  .hero { padding: 4rem 1rem 4.5rem; }
+}
+
+/* FAQ */
+.faq {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 3rem;
+}
+.faq h2 { margin-bottom: 1.5rem; }
+
+.accordion-item {
+  margin-bottom: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.accordion-item h3 { margin: 0; font-size: 1rem; }
+.accordion-item button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0.85rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.accordion-item button:hover { background: var(--surface-alt); }
+.accordion-item .chev { transition: transform 0.2s; }
+.accordion-item.active .chev { transform: rotate(180deg); }
+.accordion-item .content p {
+  margin: 0;
+  padding: 0 1rem 1rem;
+  color: var(--text-muted);
+}

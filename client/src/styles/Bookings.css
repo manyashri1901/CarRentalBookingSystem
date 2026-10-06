@@ -1,0 +1,97 @@
+/* Cars listing: filters and responsive card grid
+   1 column on mobile, 2 on tablet, 3 on desktop, 4 on wide screens */
+
+.booking-container h1 { margin-bottom: 1.25rem; }
+
+.search-filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.car-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.car-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.car-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.car-img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: var(--surface-alt);
+}
+.car-img.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
+.car-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.5rem;
+  padding: 1rem 1.1rem 1.1rem;
+}
+.car-body h3 { margin: 0; }
+.car-type { margin: 0; color: var(--text-muted); font-weight: 500; }
+
+.car-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.feature {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.rating { font-size: 0.9rem; color: var(--text-muted); }
+.rating .star { color: #e0a100; }
+.rating .star.empty { color: var(--border); }
+
+.price {
+  margin: 0;
+  margin-top: auto;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+.car-body .btn { margin-top: 0.5rem; }
+
+@media (min-width: 640px) {
+  .search-filters { grid-template-columns: repeat(3, 1fr); }
+  .car-list { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .car-list { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1360px) {
+  .page.booking-container { max-width: 1400px; }
+  .car-list { grid-template-columns: repeat(4, 1fr); }
+}

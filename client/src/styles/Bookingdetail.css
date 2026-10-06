@@ -1,0 +1,23 @@
+/* Booking details form */
+
+.booking-details-container h1 { margin-bottom: 1.25rem; }
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 480px) {
+  .form-row { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 768px) {
+  .booking-form { padding: 2rem; }
+}
