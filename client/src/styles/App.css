@@ -337,7 +337,7 @@ input:focus, select:focus, textarea:focus {
 .nav-menu a.nav-cta { background: var(--accent); color: var(--accent-contrast); justify-content: center; }
 .nav-menu a.nav-cta:hover { background: var(--accent-hover); }
 
-@media (min-width: 900px) {
+@media (min-width: 1180px) {
   .nav-toggle { display: none; }
   .nav-actions { order: 3; margin-left: 0.5rem; }
   .navbar { gap: 0.5rem; }
