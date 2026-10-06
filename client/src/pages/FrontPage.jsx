@@ -24,7 +24,7 @@ const FrontPage = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    navigate("/bookings");
+    navigate("/cars");
   };
 
   return (

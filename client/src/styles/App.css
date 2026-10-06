@@ -134,6 +134,61 @@ a { color: var(--accent); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .btn-block { width: 100%; }
 
+.btn-outline {
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+}
+.btn-outline:hover { background: var(--surface-alt); box-shadow: none; }
+
+.link-btn {
+  min-height: var(--tap);
+  padding: 0 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.link-btn:disabled { color: var(--text-muted); cursor: default; }
+
+.tag {
+  flex: none;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 36px;
+  padding: 0 0.8rem;
+  background: var(--surface-alt);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--accent); }
+
+.state-box {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+.state-box h2 { font-size: 1.2rem; }
+
 /* ---------- Forms ---------- */
 .field {
   display: flex;

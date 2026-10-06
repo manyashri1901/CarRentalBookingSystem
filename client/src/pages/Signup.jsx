@@ -65,7 +65,7 @@ const Signup = () => {
           </p>
         )}
         <p className="muted small center">
-          Ready to drive? <Link to="/bookings">Browse cars</Link>
+          Ready to drive? <Link to="/cars">Browse cars</Link>
         </p>
       </form>
     </main>

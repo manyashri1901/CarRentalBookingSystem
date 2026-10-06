@@ -4,6 +4,8 @@
 const mongoose = require('mongoose');
 const Car = require('../models/Car');
 const Station = require('../models/Station');
+const Booking = require('../models/Booking');
+const crypto = require('crypto');
 const seedCars = require('../data/cars.json');
 const seedStations = require('../data/stations.json');
 
@@ -63,4 +65,28 @@ async function listStations(f) {
   );
 }
 
-module.exports = { source, listCars, getCar, listStations, seedCars, seedStations };
+// Bookings: MongoDB when connected. With no database they are kept in memory
+// (demo mode) and are lost when the server restarts.
+const memoryBookings = new Map();
+
+async function createBooking(data) {
+  if (dbReady()) {
+    const doc = await Booking.create(data);
+    const { _id, __v, ...rest } = doc.toObject();
+    return { id: String(_id), ...rest };
+  }
+  const booking = { id: crypto.randomUUID(), ...data, createdAt: new Date() };
+  memoryBookings.set(booking.id, booking);
+  return booking;
+}
+
+async function getBooking(id) {
+  if (!dbReady()) return memoryBookings.get(id) || null;
+  if (!mongoose.isValidObjectId(id)) return null;
+  const doc = await Booking.findById(id).lean();
+  if (!doc) return null;
+  const { _id, __v, ...rest } = doc;
+  return { id: String(_id), ...rest };
+}
+
+module.exports = { createBooking, getBooking, source, listCars, getCar, listStations, seedCars, seedStations };

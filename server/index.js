@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const dealsRoutes = require('./routes/deals');
 const carsRoutes = require('./routes/cars');
 const stationsRoutes = require('./routes/stations');
+const bookingsRoutes = require('./routes/bookings');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,11 +29,12 @@ app.use('/api/auth', authRoutes);
 app.use('/api/deals', dealsRoutes);
 app.use('/api/cars', carsRoutes);
 app.use('/api/stations', stationsRoutes);
+app.use('/api/bookings', bookingsRoutes);
 
 // Without MONGO_URI the API serves the seed JSON in server/data (cars, stations).
 // Start listening even if the DB is down so the host health check passes
 if (!process.env.MONGO_URI) {
-  console.warn('MONGO_URI is not set - serving cars/stations from JSON seed data; signup and bookings are unavailable.');
+  console.warn('MONGO_URI is not set - serving cars/stations from JSON seed data; signup is unavailable and bookings are kept in memory (demo mode).');
 } else {
   mongoose
     .connect(process.env.MONGO_URI)

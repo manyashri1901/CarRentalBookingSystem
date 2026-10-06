@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, NavLink, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, Link, Navigate, useLocation } from 'react-router-dom';
 
 import Logo from './components/Logo';
 import { useTheme } from './theme';
@@ -8,13 +8,13 @@ import About from './pages/About';
 import Signup from './pages/Signup';
 import Contact from './pages/Contact';
 import Deals from './pages/Deals';
-import Bookings from './pages/Bookings';
+import Cars from './pages/Cars';
 import Bookingdetail from './pages/Bookingdetail';
 import PaymentPage from './pages/PaymentPage';
 
 const links = [
   { to: '/', label: 'Home', end: true },
-  { to: '/bookings', label: 'Cars' },
+  { to: '/cars', label: 'Cars' },
   { to: '/deals', label: 'Deals' },
   { to: '/booking-detail', label: 'Booking Details' },
   { to: '/about', label: 'About' },
@@ -106,7 +106,8 @@ export default function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/deals" element={<Deals />} />
-        <Route path="/bookings" element={<Bookings />} />
+        <Route path="/cars" element={<Cars />} />
+        <Route path="/bookings" element={<Navigate to="/cars" replace />} />
         <Route path="/booking-detail" element={<Bookingdetail />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="*" element={<NotFound />} />
