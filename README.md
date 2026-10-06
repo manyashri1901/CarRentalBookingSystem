@@ -14,6 +14,24 @@ server/   Express API        - routes/, models/
 render.yaml                  - Render blueprint for the API
 ```
 
+## Pages
+`/` landing (animated hero, CO2 counter, featured EVs) - `/cars` filterable EV list (filters live in the URL) - `/cars/:id` specs, range gauge, add-ons and booking - `/map` charging stations (Leaflet + OpenStreetMap) - `/calculator` EV vs petrol trip cost and CO2 - `/booking-detail` book any EV - `/deals` - `/about` - `/contact` - `/signup`
+
+## Calculator formulas
+All inputs are editable in the UI; the defaults in `client/src/lib/co2.js` are placeholders to verify.
+```
+real-world range     = claimed range x 75%
+grid kWh per km      = battery kWh / real-world range / (1 - 10% charging loss)
+EV cost / CO2        = km x kWh per km x (Rs 15 per kWh) / x (0.75 kg CO2 per kWh)
+petrol litres        = km / 15 km per litre
+petrol cost / CO2    = litres x (Rs 100 per litre) / x (2.31 kg CO2 per litre)
+savings              = petrol - EV   (cost and CO2)
+```
+Running costs only (no rental price, tolls, parking). CO2 is tailpipe for petrol and grid electricity for the EV; manufacturing is not counted.
+
+## Booking price
+Hourly up to one day, then per day; leftover hours are charged hourly but never more than a full day. Insurance Rs 299 per started day; home charger delivery Rs 499 one-off. The server recomputes the price (`server/lib/pricing.js`), so the client total is only a preview. Without `MONGO_URI`, bookings are kept in memory (demo mode) and lost on restart.
+
 ## Run locally
 Requires Node 18+.
 
