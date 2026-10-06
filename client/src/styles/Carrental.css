@@ -1,32 +1,70 @@
-/* Home page: hero, search card, FAQ accordion */
+/* Home page: animated hero, impact counters, "why electric", featured EVs, FAQ */
 
+/* ---------- Hero ---------- */
 .hero {
-  padding: 2.5rem 1rem 3rem;
-  background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-to) 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 2.25rem 1rem 2.5rem;
+  background:
+    radial-gradient(600px 300px at 85% 10%, rgba(74, 222, 128, 0.35), transparent 70%),
+    linear-gradient(135deg, var(--hero-from) 0%, var(--hero-to) 100%);
+  background-size: 140% 140%, 100% 100%;
   color: #fff;
+  animation: hero-glow 12s ease-in-out infinite alternate;
 }
+@keyframes hero-glow { from { background-position: 0% 0%, 0 0; } to { background-position: 100% 100%, 0 0; } }
+
 .hero-inner {
-  max-width: 1000px;
-  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto 1.75rem;
   text-align: center;
 }
-.hero h1 { color: #fff; margin-bottom: 0.5rem; }
-.hero p { margin: 0 0 1.5rem; font-size: 1.05rem; opacity: 0.95; }
+.hero h1 { text-wrap: balance; color: #fff; margin-bottom: 0.75rem; font-size: clamp(2rem, 6vw + 0.5rem, 3.4rem); }
+.eyebrow {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.lead { margin: 0 auto 1.25rem; max-width: 34rem; font-size: 1.05rem; opacity: 0.95; }
 
+.hero-cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+.btn-light { background: #fff; color: #0b3d37; }
+.btn-light:hover { background: #e6fff4; color: #0b3d37; }
+.btn-ghost { background: transparent; color: #fff; border: 2px solid rgba(255, 255, 255, 0.7); }
+.btn-ghost:hover { background: rgba(255, 255, 255, 0.15); }
+
+/* Animated car */
+.hero-art svg { display: block; width: 100%; max-width: 440px; height: auto; margin: 0 auto; overflow: visible; }
+.car-bob { animation: bob 1.6s ease-in-out infinite; }
+.wheel { animation: spin 0.8s linear infinite; transform-box: view-box; }
+.road { animation: road 0.9s linear infinite; }
+.bolt-pulse { animation: pulse 1.8s ease-in-out infinite; transform-origin: 205px 90px; }
+@keyframes bob { 50% { transform: translateY(-3px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes road { to { stroke-dashoffset: -40; } }
+@keyframes pulse { 50% { opacity: 0.55; transform: scale(1.12); } }
+
+/* Search card */
 .search-bar {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
   background: var(--surface);
   color: var(--text);
   border-radius: var(--radius);
-  padding: 1rem;
   box-shadow: var(--shadow-md);
   text-align: left;
 }
-
-.tabs {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
 .tabs button {
   flex: 1;
   min-height: var(--tap);
@@ -42,33 +80,53 @@
 }
 .tabs button:hover { background: var(--border); }
 .tabs button.active { background: var(--accent); color: var(--accent-contrast); }
+.inputs { display: grid; grid-template-columns: 1fr; gap: 0.85rem; align-items: end; }
 
-.inputs {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.85rem;
-  align-items: end;
+/* ---------- Impact counters ---------- */
+.impact { padding: 2.5rem 1rem; text-align: center; background: var(--surface); border-bottom: 1px solid var(--border); }
+.impact h2 { margin-bottom: 1.25rem; }
+.impact-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; max-width: 900px; margin: 0 auto; }
+.impact-num { margin: 0; font-size: clamp(2.2rem, 7vw, 3rem); font-weight: 800; color: var(--accent); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.impact-label { margin: 0.25rem 0 0; color: var(--text-muted); font-weight: 600; }
+.impact-note { max-width: 640px; margin: 1.5rem auto 0; font-size: 0.85rem; color: var(--text-muted); }
+
+/* ---------- Why electric ---------- */
+.why { padding-top: 2.5rem; }
+.why h2 { margin-bottom: 1.25rem; }
+.why-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.why-card {
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.why-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.why-card h3 { margin: 0.6rem 0 0.35rem; }
+.why-card p { margin: 0; color: var(--text-muted); }
+.why-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--surface-alt);
+  font-size: 1.5rem;
 }
 
-@media (min-width: 640px) {
-  .inputs { grid-template-columns: 1fr 1fr; }
-  .search-btn { grid-column: 1 / -1; }
-}
-@media (min-width: 1024px) {
-  .inputs { grid-template-columns: 1.2fr 1fr 1fr auto; }
-  .search-btn { grid-column: auto; }
-  .hero { padding: 4rem 1rem 4.5rem; }
-}
+/* ---------- Featured EVs ---------- */
+.featured { padding-top: 1.5rem; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
+.section-head h2 { margin: 0; text-align: left; }
+.more-link { font-weight: 700; text-decoration: none; white-space: nowrap; }
+.more-link:hover { text-decoration: underline; }
+.featured-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
 
-/* FAQ */
-.faq {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2.5rem 1rem 3rem;
-}
+/* ---------- FAQ ---------- */
+.faq { width: 100%; max-width: 800px; margin: 0 auto; padding: 2rem 1rem 3rem; }
 .faq h2 { margin-bottom: 1.5rem; }
-
 .accordion-item {
   margin-bottom: 0.75rem;
   background: var(--surface);
@@ -97,8 +155,25 @@
 .accordion-item button:hover { background: var(--surface-alt); }
 .accordion-item .chev { transition: transform 0.2s; }
 .accordion-item.active .chev { transform: rotate(180deg); }
-.accordion-item .content p {
-  margin: 0;
-  padding: 0 1rem 1rem;
-  color: var(--text-muted);
+.accordion-item .content p { margin: 0; padding: 0 1rem 1rem; color: var(--text-muted); }
+
+/* ---------- Breakpoints ---------- */
+@media (min-width: 640px) {
+  .inputs { grid-template-columns: 1fr 1fr; }
+  .search-btn { grid-column: 1 / -1; }
+  .impact-grid { grid-template-columns: repeat(3, 1fr); }
+  .why-grid { grid-template-columns: repeat(2, 1fr); }
+  .featured-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 900px) {
+  .hero { padding: 3.5rem 1rem 3.5rem; }
+  .hero-inner { grid-template-columns: 1.1fr 1fr; text-align: left; gap: 2rem; margin-bottom: 2.25rem; }
+  .lead { margin-left: 0; }
+  .hero-cta { justify-content: flex-start; }
+}
+@media (min-width: 1024px) {
+  .inputs { grid-template-columns: 1.2fr 1fr 1fr auto; }
+  .search-btn { grid-column: auto; }
+  .why-grid { grid-template-columns: repeat(4, 1fr); }
+  .featured-grid { grid-template-columns: repeat(4, 1fr); }
 }

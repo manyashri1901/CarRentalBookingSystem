@@ -357,13 +357,32 @@ input:focus, select:focus, textarea:focus {
 
 /* ---------- Footer (shared) ---------- */
 .footer {
+  margin-top: 2rem;
   background: var(--footer-bg);
-  color: #fff;
-  text-align: center;
-  padding: 1.5rem 1rem;
+  color: #dff5ee;
+  padding: 2rem 1rem 1.25rem;
 }
-.footer p { margin: 0; }
-.socials { margin-top: 0.75rem; display: flex; justify-content: center; gap: 0.5rem; }
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.footer-logo { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 1.2rem; font-weight: 800; color: #fff; }
+.footer-brand p { margin: 0.5rem 0 0; max-width: 28rem; font-size: 0.95rem; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+.footer-links a:hover { text-decoration: underline; }
+.footer-small { max-width: 1200px; margin: 1.25rem auto 0; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.15); font-size: 0.8rem; opacity: 0.85; }
+.socials { display: flex; gap: 0.5rem; }
 .socials a {
   display: inline-flex;
   align-items: center;
@@ -373,10 +392,27 @@ input:focus, select:focus, textarea:focus {
   color: #fff;
   font-weight: 600;
   text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-sm);
   transition: background 0.2s;
 }
 .socials a:hover { background: rgba(255, 255, 255, 0.15); }
+
+@media (min-width: 768px) {
+  .footer-inner { grid-template-columns: 1.4fr 1.2fr auto; align-items: start; }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }

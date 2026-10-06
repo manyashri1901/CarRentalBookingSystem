@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, Link, Navigate, useLocation } from 'react-router-dom';
 
 import Logo from './components/Logo';
+import Footer from './components/Footer';
 import { useTheme } from './theme';
 import FrontPage from './pages/FrontPage';
 import About from './pages/About';
@@ -117,6 +118,7 @@ export default function App() {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
